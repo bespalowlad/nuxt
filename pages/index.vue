@@ -1,9 +1,16 @@
 <template lang="pug">
   section.container
-    input.search-field(v-model="req" @input="search" type="search" placeholder="Search...")
+    input.search-field(v-model="req" @keyup="search" type="search" placeholder="Search...")
+    v-btn(text small color="primary")
     div.response
       ul.response__list
-        li.response__item(v-for="(i, index) in data" :key="index") {{i.artist}}
+        li.response__item(v-for="(i, index) in data" :key="index")
+          .response__body
+            .response__img
+              img(:src="i.image_uris ? i.image_uris.normal : ''" :alt="i.object ? i.object : 'img'")
+            .response__content
+              .response__name {{ i.name ? i.name : '' }}
+              .response__text {{ i.set_name ? i.set_name : '' }}
 </template>
 
 <script>
@@ -22,8 +29,9 @@ export default {
   },
   methods: {
     search () {
-      if(this.req !== '') {
-        this.debounce(this.getData, 500)
+      if(this.req.length > 0) {
+        let db = this.debounce(this.getData, 3000)
+        db()
       }
     },
 
@@ -35,17 +43,15 @@ export default {
     debounce (cb, delay) {
       let timerId;
       return (...args) => {
-          timerId && clearTimeout(timerId);
-          timerId = setTimeout(
-            () => {
-              console.log('cb ', cb)
-              cb(...args)
-            },
-            delay
-          );
+        timerId && clearTimeout(timerId);
+        timerId = setTimeout(
+          () => {
+            cb(...args)
+          },
+          delay
+        );
       }
     },
-
   //   debounce(cb, interval) {
   //     let timer;
   //     return function debounced() {
@@ -63,9 +69,10 @@ export default {
     // ]),
 
   },
+
   watch: {
     data () {
-      console.log('this data', this.data)
+      console.log('data ', this.data)
     }
   }
 }
@@ -86,6 +93,37 @@ export default {
     &__item {
       margin: 10px 20px;
       font-size: 16px;
+      list-style: none;
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &__body {
+      display: flex;
+      align-items: flex-start;
+    }
+
+    &__img {
+      margin-right: 20px;
+
+      img {
+        height: auto;
+        max-width: 150px;
+      }
+    }
+
+    &__name {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    &__text {
+      font-size: 16px;
+      font-weight: 500;
     }
   }
 </style>

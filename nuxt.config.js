@@ -1,3 +1,5 @@
+// import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin' 
+
 module.exports = {
   /*
   ** Headers of the page
@@ -33,7 +35,10 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
-    }
-  }
+    },
+    // transpile: ['vuetify/lib'],
+    // plugins: [new VuetifyLoaderPlugin()],
+  },
 }
+
 
